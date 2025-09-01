@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>Upload Your Collection</h2>
-  <form action="/upload/" enctype="multipart/form-data" method="post">
-    <input type="file" name="file">
-    <button type="submit">Upload</button>
+  <h2 class="mb-3">Upload Your Collection</h2>
+  <form action="/upload/" enctype="multipart/form-data" method="post" class="mb-3">
+    <input type="file" name="file" class="form-control mb-3">
+    <button type="submit" class="btn btn-primary">Upload</button>
   </form>
   {% if error %}
-    <p style="color:red">{{ error }}</p>
+    <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
 {% endblock %}

@@ -1,12 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>Collection Analytics</h2>
-  <h3>Color Breakdown</h3>
-  <img src="{{ charts.color_pie }}" alt="Color Pie Chart">
+  <h2 class="mb-4">Collection Analytics</h2>
 
-  <h3>Card Type Distribution</h3>
-  <img src="{{ charts.type_dist }}" alt="Type Distribution">
-
-  <h3>Mana Curve</h3>
-  <img src="{{ charts.mana_curve }}" alt="Mana Curve">
+  <div class="row">
+    <div class="col-md-4 text-center">
+      <h5>Color Breakdown</h5>
+      <img src="{{ charts.color_pie }}" class="img-fluid rounded shadow" alt="Color Pie Chart">
+    </div>
+    <div class="col-md-4 text-center">
+      <h5>Card Type Distribution</h5>
+      <img src="{{ charts.type_dist }}" class="img-fluid rounded shadow" alt="Type Distribution">
+    </div>
+    <div class="col-md-4 text-center">
+      <h5>Mana Curve</h5>
+      <img src="{{ charts.mana_curve }}" class="img-fluid rounded shadow" alt="Mana Curve">
+    </div>
+  </div>
 {% endblock %}

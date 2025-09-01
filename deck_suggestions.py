@@ -22,6 +22,7 @@ def compare_collection_to_deck(collection_df, deck_cards):
     return completeness, list(missing)
 
 def suggest_decks(df):
+    """Suggest meta decks from MTGGoldfish that align with collection."""
     df = normalize_headers(df)
     meta_decks = fetch_commander_decklists()
     suggestions = []
@@ -32,6 +33,15 @@ def suggest_decks(df):
                 "commander": deck["name"],
                 "url": deck["url"],
                 "completeness": f"{completeness}%",
-                "missing_cards": missing[:10]  # Limit preview
+                "missing_cards": missing[:10],  # preview only
+                "full_list": deck["cards"],     # store full decklist
             })
     return sorted(suggestions, key=lambda x: float(x["completeness"][:-1]), reverse=True)
+
+def format_deck_as_txt(deck):
+    """Format a decklist into a plain-text export (Arena style)."""
+    lines = []
+    for card in deck:
+        # Assume 1 copy of each card (commander decks are singleton except basics)
+        lines.append(f"1 {card}")
+    return "\n".join(lines)

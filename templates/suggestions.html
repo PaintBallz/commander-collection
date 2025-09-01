@@ -1,23 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
   {% if commanders %}
-    <h2>Commander Suggestions (From Your Collection)</h2>
-    <ul>
+    <h2 class="mb-3">Commander Suggestions</h2>
+    <ul class="list-group mb-4">
       {% for c in commanders %}
-        <li>{{ c }}</li>
+        <li class="list-group-item">{{ c }}</li>
       {% endfor %}
     </ul>
   {% endif %}
 
   {% if decks %}
-    <h2>Deck Suggestions (From MTGGoldfish)</h2>
-    <ul>
+    <h2 class="mb-3">Deck Suggestions</h2>
+    <div class="list-group">
       {% for d in decks %}
-        <li>
-          <b><a href="{{ d.url }}" target="_blank">{{ d.commander }}</a></b> - Buildable: {{ d.completeness }}<br>
-          Missing cards: {{ d.missing_cards | join(", ") }}
-        </li>
+        <div class="list-group-item">
+          <h5>
+            <a href="{{ d.url }}" target="_blank">{{ d.commander }}</a>
+            <span class="badge bg-primary">{{ d.completeness }}</span>
+          </h5>
+          <p><strong>Missing cards:</strong> {{ d.missing_cards | join(", ") }}</p>
+          <a href="/export-deck/{{ loop.index0 }}" class="btn btn-outline-secondary btn-sm">⬇ Export as TXT</a>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% endif %}
 {% endblock %}

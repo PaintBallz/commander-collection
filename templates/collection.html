@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
   <h2>Your Collection Summary</h2>
-  <p>Total cards: {{ summary.total }}</p>
-  <p>Unique cards: {{ summary.unique }}</p>
-  <a href="/suggest-commanders/">See Commander Suggestions</a><br>
-  <a href="/suggest-decks/">See Deck Suggestions</a><br>
-  <a href="/analytics/">See Collection Analytics</a>
+  <p><strong>Total cards:</strong> {{ summary.total }}</p>
+  <p><strong>Unique cards:</strong> {{ summary.unique }}</p>
+  <div class="d-flex gap-2">
+    <a href="/suggest-commanders/" class="btn btn-success">Commander Suggestions</a>
+    <a href="/suggest-decks/" class="btn btn-warning">Deck Suggestions</a>
+    <a href="/analytics/" class="btn btn-info text-white">Collection Analytics</a>
+  </div>
 {% endblock %}

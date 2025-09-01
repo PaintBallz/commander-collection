@@ -1,11 +1,12 @@
 from fastapi import FastAPI, UploadFile, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import PlainTextResponse
 from fastapi.templating import Jinja2Templates
 import pandas as pd
 
 from collection_manager import summarize_collection
-from deck_suggestions import suggest_commanders, suggest_decks
+from deck_suggestions import suggest_commanders, suggest_decks, format_deck_as_txt
 from analytics import generate_analytics
 
 app = FastAPI()
@@ -13,6 +14,9 @@ app = FastAPI()
 # Static files & templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+# Store last suggestions in memory so export works
+last_decks = []
 
 # In-memory collection
 collection = None
@@ -43,9 +47,11 @@ async def commander_suggestions(request: Request):
 
 @app.get("/suggest-decks/", response_class=HTMLResponse)
 async def deck_suggestions(request: Request):
+    global last_decks
     if collection is None:
         return templates.TemplateResponse("index.html", {"request": request, "error": "Upload a collection first!"})
     decks = suggest_decks(collection)
+    last_decks = decks  # save for export
     return templates.TemplateResponse("suggestions.html", {"request": request, "decks": decks})
 
 @app.get("/analytics/", response_class=HTMLResponse)
@@ -54,3 +60,14 @@ async def analytics(request: Request):
         return templates.TemplateResponse("index.html", {"request": request, "error": "Upload a collection first!"})
     charts = generate_analytics(collection)
     return templates.TemplateResponse("analytics.html", {"request": request, "charts": charts})
+
+@app.get("/export-deck/{deck_index}", response_class=PlainTextResponse)
+async def export_deck(deck_index: int):
+    """Export selected decklist as .txt"""
+    if deck_index < 0 or deck_index >= len(last_decks):
+        return PlainTextResponse("Invalid deck index", status_code=400)
+    deck = last_decks[deck_index]
+    txt = format_deck_as_txt(deck["full_list"])
+    filename = deck["commander"].replace(" ", "_") + ".txt"
+    headers = {"Content-Disposition": f"attachment; filename={filename}"}
+    return PlainTextResponse(txt, headers=headers)
