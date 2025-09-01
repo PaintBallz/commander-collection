@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if commanders %}
+    <h2>Commander Suggestions (From Your Collection)</h2>
+    <ul>
+      {% for c in commanders %}
+        <li>{{ c }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if decks %}
+    <h2>Deck Suggestions (From MTGGoldfish)</h2>
+    <ul>
+      {% for d in decks %}
+        <li>
+          <b><a href="{{ d.url }}" target="_blank">{{ d.commander }}</a></b> - Buildable: {{ d.completeness }}<br>
+          Missing cards: {{ d.missing_cards | join(", ") }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

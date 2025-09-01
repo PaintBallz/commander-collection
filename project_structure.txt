@@ -1,0 +1,12 @@
+mtg_commander_app/
+│── app.py                 # Main FastAPI app
+│── scryfall_api.py        # Wrapper for card info
+│── deck_suggestions.py    # Commander/deck suggestion logic
+│── collection_manager.py  # CSV/Excel parsing & analytics
+│── templates/
+│    ├── base.html
+│    ├── index.html
+│    ├── collection.html
+│    ├── suggestions.html
+│── static/
+     ├── style.css

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Your Collection Summary</h2>
+  <p>Total cards: {{ summary.total }}</p>
+  <p>Unique cards: {{ summary.unique }}</p>
+  <a href="/suggest-commanders/">See Commander Suggestions</a><br>
+  <a href="/suggest-decks/">See Deck Suggestions</a><br>
+  <a href="/analytics/">See Collection Analytics</a>
+{% endblock %}

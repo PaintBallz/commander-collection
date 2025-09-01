@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Collection Analytics</h2>
+  <h3>Color Breakdown</h3>
+  <img src="{{ charts.color_pie }}" alt="Color Pie Chart">
+
+  <h3>Card Type Distribution</h3>
+  <img src="{{ charts.type_dist }}" alt="Type Distribution">
+
+  <h3>Mana Curve</h3>
+  <img src="{{ charts.mana_curve }}" alt="Mana Curve">
+{% endblock %}
