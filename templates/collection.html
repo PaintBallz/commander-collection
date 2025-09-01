@@ -3,9 +3,17 @@
   <h2>Your Collection Summary</h2>
   <p><strong>Total cards:</strong> {{ summary.total }}</p>
   <p><strong>Unique cards:</strong> {{ summary.unique }}</p>
-  <div class="d-flex gap-2">
+
+  <div class="d-flex gap-2 mb-3">
     <a href="/suggest-commanders/" class="btn btn-success">Commander Suggestions</a>
     <a href="/suggest-decks/" class="btn btn-warning">Deck Suggestions</a>
     <a href="/analytics/" class="btn btn-info text-white">Collection Analytics</a>
   </div>
+
+  <!-- Clear collection button with confirmation -->
+  <a href="/clear-collection/" 
+     class="btn btn-danger"
+     onclick="return confirm('Are you sure you want to clear your uploaded collection? This action cannot be undone.');">
+     Clear Collection
+  </a>
 {% endblock %}

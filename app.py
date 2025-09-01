@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import pandas as pd
@@ -7,7 +7,6 @@ import pandas as pd
 from collection_manager import summarize_collection, normalize_headers
 from deck_suggestions import suggest_commanders, suggest_decks, format_deck_as_txt
 from analytics import generate_analytics
-from fastapi.responses import PlainTextResponse
 
 app = FastAPI()
 
@@ -38,6 +37,14 @@ async def upload_collection(request: Request, file: UploadFile):
 
     summary = summarize_collection(collection)
     return templates.TemplateResponse("collection.html", {"request": request, "summary": summary})
+
+@app.get("/clear-collection/")
+async def clear_collection():
+    """Clear the uploaded collection and reset state."""
+    global collection, last_decks
+    collection = None
+    last_decks = []
+    return RedirectResponse(url="/", status_code=303)
 
 @app.get("/suggest-commanders/", response_class=HTMLResponse)
 async def commander_suggestions(request: Request):
