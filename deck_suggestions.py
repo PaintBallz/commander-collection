@@ -3,23 +3,46 @@ from mtggoldfish_api import fetch_commander_decklists
 from collection_manager import normalize_headers
 
 def suggest_commanders(df):
-    """Find legendary creatures in the collection."""
+    """Find legendary creatures in the collection, excluding Battles."""
     df = normalize_headers(df)
     commanders = []
     for _, row in df.iterrows():
         card = fetch_card_data(row["card name"])
-        if card and "Legendary Creature" in card["type"]:
-            commanders.append(card["name"])
+        if card:
+            type_line = card["type"]
+            # Must be a Legendary Creature
+            if "Legendary Creature" in type_line and "Battle" not in type_line:
+                commanders.append(card["name"])
     return commanders
 
 def compare_collection_to_deck(collection_df, deck_cards):
     df = normalize_headers(collection_df)
-    owned = set(df["card name"].str.lower())
-    deck_set = set([c.lower() for c in deck_cards])
-    overlap = owned.intersection(deck_set)
-    missing = deck_set - owned
-    completeness = round(len(overlap) / len(deck_set) * 100, 2) if deck_set else 0
-    return completeness, list(missing)
+
+    # Normalize collection into dict {card_name: quantity}
+    owned = (
+        df.groupby("card name")["quantity"]
+        .sum()
+        .to_dict()
+    )
+
+    # Normalize deck into dict {card_name: quantity}
+    deck_dict = {}
+    for card in deck_cards:
+        deck_dict[card] = deck_dict.get(card, 0) + 1
+
+    overlap = 0
+    missing = {}
+
+    for card, need_qty in deck_dict.items():
+        have_qty = owned.get(card.lower(), 0)
+        if have_qty >= need_qty:
+            overlap += need_qty
+        else:
+            overlap += have_qty
+            missing[card] = need_qty - have_qty
+
+    completeness = round(overlap / sum(deck_dict.values()) * 100, 2)
+    return completeness, list(missing.keys())
 
 def suggest_decks(df):
     """Suggest meta decks from MTGGoldfish that align with collection."""
